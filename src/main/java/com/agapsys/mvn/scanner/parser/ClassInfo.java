@@ -30,6 +30,7 @@ public class ClassInfo {
 	public String     className;
 	public String     reflectionClassName;
 	public String     superClassName;
+	public ClassInfo  parentClass;
 	public final List<AnnotationInfo> annotations = new LinkedList<AnnotationInfo>();
 	public final List<String>         implementedInterfaces = new LinkedList<String>();
 	public final List<MethodInfo>     methods = new LinkedList<MethodInfo>();
@@ -56,4 +57,8 @@ public class ClassInfo {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return className;
+	}
 }

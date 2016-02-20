@@ -26,12 +26,12 @@ import java.util.Set;
 public abstract class SourceDirectoryScanner {
 	/**
 	 * Parse a source directory
-	 * @param srcDir source directory to be analyzed.
+	 * @param srcDirOrFile source directory to be analyzed.
 	 * @return List containing filtered classes
 	 * @throws ParsingException if an error happened during parsing.
 	 */
-	public final Set<ClassInfo> getFilteredClasses(File srcDir) throws ParsingException {
-		return parseDirectory(srcDir, null);
+	public final Set<ClassInfo> getFilteredClasses(File srcDirOrFile) throws ParsingException {
+		return parseDirOrFile(srcDirOrFile, null);
 	}
 
 	/**
@@ -43,19 +43,23 @@ public abstract class SourceDirectoryScanner {
 
 	/**
 	 * Parses a directory
-	 * @param srcDir directory to be analyzed
+	 * @param srcDirOrFile directory or source file to be analyzed
 	 * @param classInfoSet set which will contain returned results. On non-recursive calls, pass null.
 	 * @throws ParsingException if an error happened during parsing.
 	 */
-	private Set<ClassInfo> parseDirectory(File srcDir, Set<ClassInfo> classInfoSet) throws ParsingException {
+	private Set<ClassInfo> parseDirOrFile(File srcDirOrFile, Set<ClassInfo> classInfoSet) throws ParsingException {
 		if (classInfoSet == null)
 			classInfoSet = new LinkedHashSet<ClassInfo>();
 
-		for (File file : srcDir.listFiles()) {
-			if (file.isDirectory()) {
-				parseDirectory(file, classInfoSet);
-			} else {
-				parseFile(file, classInfoSet);
+		if (srcDirOrFile.isFile()) {
+			parseFile(srcDirOrFile, classInfoSet);
+		} else {
+			for (File file : srcDirOrFile.listFiles()) {
+				if (file.isDirectory()) {
+					parseDirOrFile(file, classInfoSet);
+				} else {
+					parseFile(file, classInfoSet);
+				}
 			}
 		}
 

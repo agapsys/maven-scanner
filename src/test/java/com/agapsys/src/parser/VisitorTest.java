@@ -52,16 +52,17 @@ public class VisitorTest {
 		Assert.assertEquals("1.0f", annotationInfo.properties.get("g"));
 
 		annotationInfo = classInfo.annotations.get(1);
-		Assert.assertEquals("Annotation4", annotationInfo.className);
+		Assert.assertEquals("com.agapsys.src.parser.Annotation4", annotationInfo.className);
 		Assert.assertEquals(0, annotationInfo.properties.size());
 
 		// Class info...
 		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.className);
 		Assert.assertEquals("a.b.c.SuperClass1", classInfo.superClassName);
 		Assert.assertEquals("a.b.c.SuperClass1", classInfo.superClassName);
+		Assert.assertNull(classInfo.parentClass);
 
 		Assert.assertEquals(2, classInfo.implementedInterfaces.size());
-		Assert.assertEquals("SuperInterface1", classInfo.implementedInterfaces.get(0));
+		Assert.assertEquals("com.agapsys.src.parser.SuperInterface1", classInfo.implementedInterfaces.get(0));
 		Assert.assertEquals("aa.bb.cc.dd.SuperInterface1", classInfo.implementedInterfaces.get(1));
 
 		// Methods...
@@ -73,5 +74,6 @@ public class VisitorTest {
 		classInfo = iterator.next();
 		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass", classInfo.className);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerClass", classInfo.reflectionClassName);
+		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.parentClass.className);
 	}
 }

@@ -33,6 +33,7 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Source file parser
@@ -40,12 +41,23 @@ import java.util.List;
  */
 class ClassVisitor extends VoidVisitorAdapter {
 	// CLASS SCOPE =============================================================
-	private static String getClassName(String identifier, List<String> imports) {
+	private static String getClassName(String packageName, String identifier, List<String> imports) {
+		int genericBegin = identifier.indexOf("<");
+		int genericEnd = identifier.lastIndexOf(">");
+		
+		if (genericBegin != -1 && genericEnd != -1) {
+			String genericSubStr = identifier.substring(genericBegin, genericEnd + 1);
+			identifier = identifier.replaceAll(Pattern.quote(genericSubStr), "");
+		}
+			
 		for (String importStr : imports) {
-			if (importStr.endsWith(identifier))
+			if (importStr.endsWith("." + identifier))
 				return importStr;
 		}
 
+		if (!identifier.contains("."))		
+			return packageName + "." + identifier;
+		
 		return identifier;
 	}
 
@@ -84,18 +96,34 @@ class ClassVisitor extends VoidVisitorAdapter {
 		classInfo.visibility = Visibility.fromModifiers(cid.getModifiers());
 		classInfo.isAbstract = ModifierSet.isAbstract(cid.getModifiers());
 		classInfo.isInterface = cid.isInterface();
-		classInfo.superClassName = getClassName(cid.getExtends().get(0).toString(), imports);
+		
+		List extendsList = cid.getExtends();		
+		classInfo.superClassName = extendsList == null ? null : getClassName(packageName, extendsList.get(0).toString(), imports);
 
-		for (ClassOrInterfaceType id : cid.getImplements()) {
-			classInfo.implementedInterfaces.add(getClassName(id.toString(), imports));
+		List<ClassOrInterfaceType> implementList = cid.getImplements();
+		
+		if (implementList == null)
+			implementList = new LinkedList<ClassOrInterfaceType>();
+		
+		for (ClassOrInterfaceType id : implementList) {
+			classInfo.implementedInterfaces.add(getClassName(packageName, id.toString(), imports));
 		}
 
-		for (AnnotationExpr ae : cid.getAnnotations()) {
+		List<AnnotationExpr> annotationList = cid.getAnnotations();
+		
+		if (annotationList == null)
+			annotationList = new LinkedList<AnnotationExpr>();
+		
+		for (AnnotationExpr ae : annotationList) {
 			AnnotationInfo annotation = getAnnotationInfo(packageName, imports, ae);
 			classInfo.annotations.add(annotation);
 		}
 
-		for (BodyDeclaration member : cid.getMembers()) {
+		List<BodyDeclaration> bodyDeclarationList = cid.getMembers();
+		if (bodyDeclarationList == null)
+			bodyDeclarationList = new LinkedList<BodyDeclaration>();
+		
+		for (BodyDeclaration member : bodyDeclarationList) {
 			if (member instanceof MethodDeclaration) {
 				classInfo.methods.add(getMethodInfo(packageName, imports, (MethodDeclaration) member));
 			}
@@ -106,13 +134,13 @@ class ClassVisitor extends VoidVisitorAdapter {
 
 	private static AnnotationInfo getAnnotationInfo(String packgeName, List<String> imports, AnnotationExpr ae) {
 		AnnotationInfo annotation = new AnnotationInfo();
-		annotation.className = getClassName(ae.getName().toString(), imports);
+		annotation.className = getClassName(packgeName, ae.getName().toString(), imports);
 		if (ae.getChildrenNodes().size() > 1) {
 			for (int i = 1; i < ae.getChildrenNodes().size(); i++) {
 				MemberValuePair pair = (MemberValuePair) ae.getChildrenNodes().get(i);
 				String name = pair.getName();
 
-				String value = getAnnotationParamValue(pair.getValue(), imports);
+				String value = getAnnotationParamValue(packgeName, pair.getValue(), imports);
 
 				annotation.properties.put(name, value);
 			}
@@ -137,12 +165,12 @@ class ClassVisitor extends VoidVisitorAdapter {
 		return info;
 	}
 
-	private static final String getAnnotationParamValue(Object expr, List<String> imports) {
+	private static final String getAnnotationParamValue(String packageName, Object expr, List<String> imports) {
 		String str = expr.toString();
 
 		if (expr instanceof FieldAccessExpr) {
 			FieldAccessExpr fae = (FieldAccessExpr) expr;
-			String className = getClassName(fae.getScope().toString(), imports);
+			String className = getClassName(packageName, fae.getScope().toString(), imports);
 			return String.format("%s.%s", className, fae.getField());
 		} else if (expr instanceof IntegerLiteralExpr) {
 			return str;
@@ -182,7 +210,11 @@ class ClassVisitor extends VoidVisitorAdapter {
 
 	@Override
 	public void visit(ClassOrInterfaceDeclaration n, Object arg) {
+		ClassInfo parentClass = currentClass;
+		
 		currentClass = getClassInfo(currentClass, currentPackage, imports, n);
+		currentClass.parentClass = parentClass;
+		
 		sourceFileInfo.classes.add(currentClass);
 		super.visit(n, arg);
 	}
