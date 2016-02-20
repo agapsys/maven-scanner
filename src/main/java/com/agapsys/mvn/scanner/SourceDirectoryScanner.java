@@ -38,8 +38,9 @@ public abstract class SourceDirectoryScanner {
 	 * Returns a boolean indicating if given class information shall be included in processed scan information.
 	 * @param classInfo class information to be evaluated
 	 * @return boolean indicating if given class information shall be included in processed scan information.
+	 * @throws ParsingException if there is an error while processing the class information.
 	 */
-	protected abstract boolean isValid(ClassInfo classInfo);
+	protected abstract boolean shallBeIncluded(ClassInfo classInfo) throws ParsingException;
 
 	/**
 	 * Parses a directory
@@ -77,7 +78,7 @@ public abstract class SourceDirectoryScanner {
 		SourceFileInfo srcFileInfo = SourceFileInfo.getInfo(srcFile);
 
 		for (ClassInfo classInfo : srcFileInfo.classes) {
-			if (isValid(classInfo))
+			if (shallBeIncluded(classInfo))
 				classInfoSet.add(classInfo);
 		}
 	}
