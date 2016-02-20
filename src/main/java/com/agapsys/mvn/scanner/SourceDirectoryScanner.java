@@ -58,7 +58,8 @@ public abstract class SourceDirectoryScanner {
 				if (file.isDirectory()) {
 					parseDirOrFile(file, classInfoSet);
 				} else {
-					parseFile(file, classInfoSet);
+					if (file.getName().endsWith(".java")) 
+						parseFile(file, classInfoSet);
 				}
 			}
 		}
