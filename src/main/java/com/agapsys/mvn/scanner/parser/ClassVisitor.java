@@ -102,7 +102,7 @@ class ClassVisitor extends VoidVisitorAdapter {
 
 		classInfo.containerClass = containerClass;
 		classInfo.className = getClassName(packageName, containerClass == null ? "" : containerClass.className, td.getName().toString());
-		classInfo.isStaticNested = null != null && ModifierSet.isStatic(td.getModifiers());
+		classInfo.isStaticNested = containerClass != null && ModifierSet.isStatic(td.getModifiers());
 		classInfo.reflectionClassName = getReflectionClassName(packageName, containerClass == null ? "" : containerClass.reflectionClassName, td.getName().toString());
 		classInfo.visibility = Visibility.fromModifiers(td.getModifiers());
 		classInfo.isAbstract = ModifierSet.isAbstract(td.getModifiers());

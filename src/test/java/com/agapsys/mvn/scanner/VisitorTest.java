@@ -82,6 +82,7 @@ public class VisitorTest {
 		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass", classInfo.className);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerClass", classInfo.reflectionClassName);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.containerClass.className);
+		Assert.assertTrue(classInfo.isStaticNested);
 		
 		// Deep class
 		classInfo = iterator.next();
@@ -89,7 +90,8 @@ public class VisitorTest {
 		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass.DeepClass", classInfo.className);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerClass$DeepClass", classInfo.reflectionClassName);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass", classInfo.containerClass.className);
-		
+		Assert.assertTrue(classInfo.isStaticNested);
+
 		// Inner enum
 		classInfo = iterator.next();
 		Assert.assertEquals(sourceFile, classInfo.sourceFileInfo.sourceFile);
@@ -98,5 +100,7 @@ public class VisitorTest {
 		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerEnum", classInfo.className);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerEnum", classInfo.reflectionClassName);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.containerClass.className);
+		Assert.assertFalse(classInfo.isStaticNested);
+
 	}
 }
