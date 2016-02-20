@@ -87,8 +87,9 @@ class ClassVisitor extends VoidVisitorAdapter {
 		}
 	}
 
-	private static ClassInfo getClassInfo(ClassInfo containerClass, String packageName, List<String> imports, TypeDeclaration td) {
+	private static ClassInfo getClassInfo(SourceFileInfo sourceFileInfo, ClassInfo containerClass, String packageName, List<String> imports, TypeDeclaration td) {
 		ClassInfo classInfo = new ClassInfo();
+		classInfo.sourceFileInfo = sourceFileInfo;
 
 		String containerClassName = containerClass != null ? containerClass.className : "";
 		String containerClassReflectionName = containerClass != null ? containerClass.reflectionClassName : "";
@@ -221,7 +222,7 @@ class ClassVisitor extends VoidVisitorAdapter {
 	}
 
 	private void visit(TypeDeclaration td) {
-		currentClass = getClassInfo(currentClass, currentPackage, imports, td);
+		currentClass = getClassInfo(sourceFileInfo, currentClass, currentPackage, imports, td);
 		sourceFileInfo.classes.add(currentClass);
 	}
 	

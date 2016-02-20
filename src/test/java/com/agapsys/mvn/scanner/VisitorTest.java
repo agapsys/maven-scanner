@@ -31,13 +31,18 @@ public class VisitorTest {
 	@Test
 	public void test() throws ParsingException {
 		ClassInfo classInfo;
-		SourceFileInfo srcFileInfo = SourceFileInfo.getInfo(new File("TestClass.java"));
-		Assert.assertEquals(3, srcFileInfo.classes.size());
+		
+		File sourceFile = new File("TestClass.java");
+		
+		SourceFileInfo sourceFileInfo = SourceFileInfo.getInfo(sourceFile);
+		Assert.assertEquals(sourceFile, sourceFileInfo.sourceFile);
+		
+		Assert.assertEquals(3, sourceFileInfo.classes.size());
 
-		Iterator<ClassInfo> iterator = srcFileInfo.classes.iterator();
+		Iterator<ClassInfo> iterator = sourceFileInfo.classes.iterator();
 		
 		classInfo = iterator.next();
-
+		Assert.assertEquals(sourceFile, classInfo.sourceFileInfo.sourceFile);
 		Assert.assertEquals(2, classInfo.annotations.size());
 
 		// Annotations...
@@ -73,12 +78,14 @@ public class VisitorTest {
 
 		// Inner class
 		classInfo = iterator.next();
+		Assert.assertEquals(sourceFile, classInfo.sourceFileInfo.sourceFile);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass", classInfo.className);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerClass", classInfo.reflectionClassName);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.containerClass.className);
 		
 		// Inner enum
 		classInfo = iterator.next();
+		Assert.assertEquals(sourceFile, classInfo.sourceFileInfo.sourceFile);
 		Assert.assertTrue(classInfo.isEnum);
 		Assert.assertEquals(Visibility.DEFAULT, classInfo.visibility);
 	}

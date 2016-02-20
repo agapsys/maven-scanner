@@ -24,15 +24,16 @@ import java.util.List;
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class ClassInfo {
-	public Visibility visibility;
-	public boolean    isAbstract;
-	public boolean    isInterface;
-	public boolean    isEnum;
-	public String     className;
-	public String     reflectionClassName;
-	public String     superClassName;
-	public ClassInfo  containerClass;
-	public boolean    isStaticNested;
+	public Visibility     visibility;
+	public boolean        isAbstract;
+	public boolean        isInterface;
+	public boolean        isEnum;
+	public String         className;
+	public String         reflectionClassName;
+	public String         superClassName;
+	public ClassInfo      containerClass;
+	public boolean        isStaticNested;
+	public SourceFileInfo sourceFileInfo;
 	public final List<AnnotationInfo> annotations = new LinkedList<AnnotationInfo>();
 	public final List<String>         implementedInterfaces = new LinkedList<String>();
 	public final List<MethodInfo>     methods = new LinkedList<MethodInfo>();

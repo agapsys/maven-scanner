@@ -32,7 +32,7 @@ import java.util.Set;
 public class SourceFileInfo {
 	// STATIC SCOPE ============================================================
 	public static SourceFileInfo getInfo(File file) throws ParsingException {
-		SourceFileInfo info = new SourceFileInfo();
+		SourceFileInfo info = new SourceFileInfo(file);
 
 		FileInputStream fis = null;
 		CompilationUnit cu = null;
@@ -61,6 +61,12 @@ public class SourceFileInfo {
 	// =========================================================================
 
 	// INSTANCE SCOPE ==========================================================
+	private SourceFileInfo(File srcFile) {
+		this.sourceFile = srcFile;
+	}
+	
+	public final File sourceFile;
+	
 	public final Set<ClassInfo> classes = new LinkedHashSet<ClassInfo>();
 	// =========================================================================
 }
