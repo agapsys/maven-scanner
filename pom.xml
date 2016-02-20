@@ -20,13 +20,13 @@ limitations under the License.
 	<modelVersion>4.0.0</modelVersion>
     
 	<groupId>com.agapsys.libs</groupId>
-	<artifactId>maven-scanner</artifactId>
+	<artifactId>scanner-maven-plugin-lib</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Maven Scanner Library</name>
-	<description>Utility library for maven scanner plugins</description>
-	<url>https://github.com/agapsys/maven-scanner/</url>
+	<name>Scanner Maven Plugin Library</name>
+	<description>Utility library for scanner maven plugins</description>
+	<url>https://github.com/agapsys/scanner-maven-plugin-lib/</url>
 	
 	<licenses>
 		<license>
@@ -45,8 +45,8 @@ limitations under the License.
 	</developers>
 	
 	<scm>
-		<connection>scm:git:git@github.com:agapsys/maven-scanner.git</connection>
-		<url>git@github.com:agapsys/maven-scanner.git</url>
+		<connection>scm:git:git@github.com:agapsys/scanner-maven-plugin-lib.git</connection>
+		<url>git@github.com:agapsys/scanner-maven-plugin-lib.git</url>
 	</scm>
 	
 	<organization>
@@ -65,7 +65,7 @@ limitations under the License.
 		<dependency>
 			<groupId>com.github.javaparser</groupId>
 			<artifactId>javaparser-core</artifactId>
-			<version>2.2.2</version>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
