@@ -59,7 +59,7 @@ public class VisitorTest {
 		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.className);
 		Assert.assertEquals("a.b.c.SuperClass1", classInfo.superClassName);
 		Assert.assertEquals("a.b.c.SuperClass1", classInfo.superClassName);
-		Assert.assertNull(classInfo.parentClass);
+		Assert.assertNull(classInfo.containerClass);
 
 		Assert.assertEquals(2, classInfo.implementedInterfaces.size());
 		Assert.assertEquals("com.agapsys.src.parser.SuperInterface1", classInfo.implementedInterfaces.get(0));
@@ -74,6 +74,6 @@ public class VisitorTest {
 		classInfo = iterator.next();
 		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass", classInfo.className);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerClass", classInfo.reflectionClassName);
-		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.parentClass.className);
+		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.containerClass.className);
 	}
 }
