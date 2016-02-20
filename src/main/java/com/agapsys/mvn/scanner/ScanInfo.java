@@ -26,17 +26,17 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Scan information
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public abstract class ScanInfo {
-	private final List<String> entryList = new LinkedList<String>();
+	private final Set<String> entryList = new LinkedHashSet<String>();
 
-	protected List<String> getEntries() {
+	public Set<String> getEntries() {
 		return entryList;
 	}
 
