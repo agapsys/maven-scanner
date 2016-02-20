@@ -70,4 +70,8 @@ public class ClassInfo {
 		String[] components = className.split(Pattern.quote("."));
 		return components[components.length - 1];
 	}
+	
+	public boolean isTopClass() {
+		return containerClass == null;
+	}
 }

@@ -92,9 +92,9 @@ class ClassVisitor extends VoidVisitorAdapter {
 		classInfo.sourceFileInfo = sourceFileInfo;
 
 		ClassInfo containerClass;
-		if (td.getParentNode() instanceof ClassOrInterfaceDeclaration) {
-			ClassOrInterfaceDeclaration cid = (ClassOrInterfaceDeclaration) td.getParentNode();
-			String parentClassSimpleName = cid.getName().toString();
+		if (td.getParentNode() instanceof TypeDeclaration) {
+			TypeDeclaration containerTd = (TypeDeclaration) td.getParentNode();
+			String parentClassSimpleName = containerTd.getName().toString();
 			containerClass = sourceFileInfo.getClassInfoBySimpleName(parentClassSimpleName);
 		} else {
 			containerClass = null;
