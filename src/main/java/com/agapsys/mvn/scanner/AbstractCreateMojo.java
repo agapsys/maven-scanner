@@ -22,11 +22,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Base CREATE mojo.
+ * Base CREATE Mojo.
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public abstract class AbstractCreateMojo extends AbstractMojo {
@@ -44,7 +43,7 @@ public abstract class AbstractCreateMojo extends AbstractMojo {
 	protected abstract ScannerDefs getScannerDefs();
 
 	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	public void execute() throws MojoExecutionException {
 		try {
 
 			ScannerDefs defs = getScannerDefs();
@@ -83,11 +82,11 @@ public abstract class AbstractCreateMojo extends AbstractMojo {
 
 				writer.close();
 			} catch (IOException ex) {
-				throw new MojoFailureException(ioErrMsg);
+				throw new MojoExecutionException(ioErrMsg);
 			}
 
 		} catch (ParsingException ex) {
-			throw new MojoFailureException(ex.getMessage());
+			throw new MojoExecutionException(ex.getMessage());
 		}
 	}
 }

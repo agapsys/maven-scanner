@@ -26,11 +26,10 @@ import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Base LIST mojo.
+ * Base LIST Mojo.
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public abstract class AbstractListMojo extends AbstractMojo {
@@ -93,7 +92,7 @@ public abstract class AbstractListMojo extends AbstractMojo {
 	protected abstract ScannerDefs getScannerDefs();
 
 	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	public void execute() throws MojoExecutionException {
 		try {
 
 			ScannerDefs defs = getScannerDefs();
