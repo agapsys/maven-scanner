@@ -26,4 +26,9 @@ import java.util.Map;
 public class AnnotationInfo {
 	public String className;
 	public final Map<String, String> properties = new LinkedHashMap<String, String>();
+
+	@Override
+	public String toString() {
+		return className;
+	}
 }

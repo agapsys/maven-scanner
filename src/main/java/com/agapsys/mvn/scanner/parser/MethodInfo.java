@@ -29,4 +29,9 @@ public class MethodInfo {
 	public String     signature;
 	public boolean    isStatic;
 	public final List<AnnotationInfo> annotations = new LinkedList<AnnotationInfo>();
+
+	@Override
+	public String toString() {
+		return signature;
+	}
 }

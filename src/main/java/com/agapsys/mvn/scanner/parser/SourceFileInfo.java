@@ -68,5 +68,11 @@ public class SourceFileInfo {
 	public final File sourceFile;
 	
 	public final Set<ClassInfo> classes = new LinkedHashSet<ClassInfo>();
+	
+	@Override
+	public String toString() {
+		return sourceFile.toString();
+	}
 	// =========================================================================
+
 }
