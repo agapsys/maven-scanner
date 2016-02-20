@@ -87,17 +87,23 @@ class ClassVisitor extends VoidVisitorAdapter {
 		}
 	}
 
-	private static ClassInfo getClassInfo(SourceFileInfo sourceFileInfo, ClassInfo containerClass, String packageName, List<String> imports, TypeDeclaration td) {
+	private static ClassInfo getClassInfo(SourceFileInfo sourceFileInfo, String packageName, List<String> imports, TypeDeclaration td) {
 		ClassInfo classInfo = new ClassInfo();
 		classInfo.sourceFileInfo = sourceFileInfo;
 
-		String containerClassName = containerClass != null ? containerClass.className : "";
-		String containerClassReflectionName = containerClass != null ? containerClass.reflectionClassName : "";
+		ClassInfo containerClass;
+		if (td.getParentNode() instanceof ClassOrInterfaceDeclaration) {
+			ClassOrInterfaceDeclaration cid = (ClassOrInterfaceDeclaration) td.getParentNode();
+			String parentClassSimpleName = cid.getName().toString();
+			containerClass = sourceFileInfo.getClassInfoBySimpleName(parentClassSimpleName);
+		} else {
+			containerClass = null;
+		}
 
-		classInfo.className = getClassName(packageName, containerClassName, td.getName().toString());
 		classInfo.containerClass = containerClass;
-		classInfo.isStaticNested = containerClass != null && ModifierSet.isStatic(td.getModifiers());
-		classInfo.reflectionClassName = getReflectionClassName(packageName, containerClassReflectionName, td.getName().toString());
+		classInfo.className = getClassName(packageName, containerClass == null ? "" : containerClass.className, td.getName().toString());
+		classInfo.isStaticNested = null != null && ModifierSet.isStatic(td.getModifiers());
+		classInfo.reflectionClassName = getReflectionClassName(packageName, containerClass == null ? "" : containerClass.reflectionClassName, td.getName().toString());
 		classInfo.visibility = Visibility.fromModifiers(td.getModifiers());
 		classInfo.isAbstract = ModifierSet.isAbstract(td.getModifiers());
 		
@@ -207,7 +213,6 @@ class ClassVisitor extends VoidVisitorAdapter {
 	}
 
 	private String currentPackage;
-	private ClassInfo currentClass;
 	private List<String> imports;
 
 	@Override
@@ -222,8 +227,8 @@ class ClassVisitor extends VoidVisitorAdapter {
 	}
 
 	private void visit(TypeDeclaration td) {
-		currentClass = getClassInfo(sourceFileInfo, currentClass, currentPackage, imports, td);
-		sourceFileInfo.classes.add(currentClass);
+		ClassInfo classInfo = getClassInfo(sourceFileInfo, currentPackage, imports, td);
+		sourceFileInfo.classes.add(classInfo);
 	}
 	
 	@Override

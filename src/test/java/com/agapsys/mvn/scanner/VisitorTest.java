@@ -37,7 +37,7 @@ public class VisitorTest {
 		SourceFileInfo sourceFileInfo = SourceFileInfo.getInfo(sourceFile);
 		Assert.assertEquals(sourceFile, sourceFileInfo.sourceFile);
 		
-		Assert.assertEquals(3, sourceFileInfo.classes.size());
+		Assert.assertEquals(4, sourceFileInfo.classes.size());
 
 		Iterator<ClassInfo> iterator = sourceFileInfo.classes.iterator();
 		
@@ -83,10 +83,20 @@ public class VisitorTest {
 		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerClass", classInfo.reflectionClassName);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.containerClass.className);
 		
+		// Deep class
+		classInfo = iterator.next();
+		Assert.assertEquals(sourceFile, classInfo.sourceFileInfo.sourceFile);
+		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass.DeepClass", classInfo.className);
+		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerClass$DeepClass", classInfo.reflectionClassName);
+		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass", classInfo.containerClass.className);
+		
 		// Inner enum
 		classInfo = iterator.next();
 		Assert.assertEquals(sourceFile, classInfo.sourceFileInfo.sourceFile);
 		Assert.assertTrue(classInfo.isEnum);
 		Assert.assertEquals(Visibility.DEFAULT, classInfo.visibility);
+		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerEnum", classInfo.className);
+		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerEnum", classInfo.reflectionClassName);
+		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.containerClass.className);
 	}
 }

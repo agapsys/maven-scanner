@@ -18,6 +18,7 @@ package com.agapsys.mvn.scanner.parser;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Represents a class information
@@ -63,5 +64,10 @@ public class ClassInfo {
 	@Override
 	public String toString() {
 		return className;
+	}
+	
+	public String getSimpleName() {
+		String[] components = className.split(Pattern.quote("."));
+		return components[components.length - 1];
 	}
 }

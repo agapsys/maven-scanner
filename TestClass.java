@@ -26,6 +26,9 @@ import f.g.h.Annotation2;
 public class TestClass extends SuperClass1 implements SuperInterface1, aa.bb.cc.dd.SuperInterface1 {
 	@Annotation2
 	protected static class InnerClass extends aa.bb.cc.dd.SuperInterface3 implements aa.bb.cc.dd.SuperInterface2 {
+		
+		private static class DeepClass {}
+		
 		public InnerClass() {}
 		
 		public int inner_publicMethod() {}

@@ -69,6 +69,28 @@ public class SourceFileInfo {
 	
 	public final Set<ClassInfo> classes = new LinkedHashSet<ClassInfo>();
 	
+	public ClassInfo getClassInfoByClassName(String className) {
+		for (ClassInfo classInfo : classes) {
+			if (classInfo.className.equals(className))
+				return classInfo;
+		}
+		
+		return null;
+	}
+	
+	public ClassInfo getClassInfoBySimpleName(String simpleName) {
+		// According to JLS, inner classes must have unique name inside enclosing classes:
+		// http://stackoverflow.com/a/24214835
+		for (ClassInfo classInfo : classes) {
+			if (classInfo.getSimpleName().equals(simpleName))
+				return classInfo;
+		}
+		
+		return null;
+		
+	}
+	
+	
 	@Override
 	public String toString() {
 		return sourceFile.toString();
