@@ -112,7 +112,7 @@ class ClassVisitor extends VoidVisitorAdapter {
 			classInfo.isInterface = cid.isInterface();
 		
 			List extendsList = cid.getExtends();		
-			classInfo.superClassName = extendsList == null || extendsList.isEmpty() ? null : getClassName(packageName, extendsList.get(0).toString(), imports);
+			classInfo.superclassName = extendsList == null || extendsList.isEmpty() ? null : getClassName(packageName, extendsList.get(0).toString(), imports);
 
 			List<ClassOrInterfaceType> implementList = cid.getImplements();
 		

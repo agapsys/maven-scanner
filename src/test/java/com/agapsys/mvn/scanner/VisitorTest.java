@@ -63,8 +63,8 @@ public class VisitorTest {
 
 		// Class info...
 		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.className);
-		Assert.assertEquals("a.b.c.SuperClass1", classInfo.superClassName);
-		Assert.assertEquals("a.b.c.SuperClass1", classInfo.superClassName);
+		Assert.assertEquals("a.b.c.SuperClass1", classInfo.superclassName);
+		Assert.assertEquals("a.b.c.SuperClass1", classInfo.superclassName);
 		Assert.assertNull(classInfo.containerClass);
 
 		Assert.assertEquals(2, classInfo.implementedInterfaces.size());

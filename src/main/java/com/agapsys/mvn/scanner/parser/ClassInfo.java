@@ -31,7 +31,7 @@ public class ClassInfo {
 	public boolean        isEnum;
 	public String         className;
 	public String         reflectionClassName;
-	public String         superClassName;
+	public String         superclassName;
 	public ClassInfo      containerClass;
 	public boolean        isStaticNested;
 	public SourceFileInfo sourceFileInfo;
