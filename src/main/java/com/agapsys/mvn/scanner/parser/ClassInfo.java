@@ -27,10 +27,12 @@ public class ClassInfo {
 	public Visibility visibility;
 	public boolean    isAbstract;
 	public boolean    isInterface;
+	public boolean    isEnum;
 	public String     className;
 	public String     reflectionClassName;
 	public String     superClassName;
-	public ClassInfo  parentClass;
+	public ClassInfo  containerClass;
+	public boolean    isStaticNested;
 	public final List<AnnotationInfo> annotations = new LinkedList<AnnotationInfo>();
 	public final List<String>         implementedInterfaces = new LinkedList<String>();
 	public final List<MethodInfo>     methods = new LinkedList<MethodInfo>();

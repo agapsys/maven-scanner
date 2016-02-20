@@ -20,8 +20,10 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.ModifierSet;
+import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.DoubleLiteralExpr;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
@@ -85,31 +87,41 @@ class ClassVisitor extends VoidVisitorAdapter {
 		}
 	}
 
-	private static ClassInfo getClassInfo(ClassInfo containerClass, String packageName, List<String> imports, ClassOrInterfaceDeclaration cid) {
+	private static ClassInfo getClassInfo(ClassInfo containerClass, String packageName, List<String> imports, TypeDeclaration td) {
 		ClassInfo classInfo = new ClassInfo();
 
 		String containerClassName = containerClass != null ? containerClass.className : "";
 		String containerClassReflectionName = containerClass != null ? containerClass.reflectionClassName : "";
 
-		classInfo.className = getClassName(packageName, containerClassName, cid.getName().toString());
-		classInfo.reflectionClassName = getReflectionClassName(packageName, containerClassReflectionName, cid.getName().toString());
-		classInfo.visibility = Visibility.fromModifiers(cid.getModifiers());
-		classInfo.isAbstract = ModifierSet.isAbstract(cid.getModifiers());
-		classInfo.isInterface = cid.isInterface();
+		classInfo.className = getClassName(packageName, containerClassName, td.getName().toString());
+		classInfo.containerClass = containerClass;
+		classInfo.isStaticNested = containerClass != null && ModifierSet.isStatic(td.getModifiers());
+		classInfo.reflectionClassName = getReflectionClassName(packageName, containerClassReflectionName, td.getName().toString());
+		classInfo.visibility = Visibility.fromModifiers(td.getModifiers());
+		classInfo.isAbstract = ModifierSet.isAbstract(td.getModifiers());
 		
-		List extendsList = cid.getExtends();		
-		classInfo.superClassName = extendsList == null ? null : getClassName(packageName, extendsList.get(0).toString(), imports);
+		if (td instanceof ClassOrInterfaceDeclaration) {
+			ClassOrInterfaceDeclaration cid = (ClassOrInterfaceDeclaration) td;
+			classInfo.isInterface = cid.isInterface();
+		
+			List extendsList = cid.getExtends();		
+			classInfo.superClassName = extendsList == null ? null : getClassName(packageName, extendsList.get(0).toString(), imports);
 
-		List<ClassOrInterfaceType> implementList = cid.getImplements();
+			List<ClassOrInterfaceType> implementList = cid.getImplements();
 		
-		if (implementList == null)
-			implementList = new LinkedList<ClassOrInterfaceType>();
-		
-		for (ClassOrInterfaceType id : implementList) {
-			classInfo.implementedInterfaces.add(getClassName(packageName, id.toString(), imports));
+			if (implementList == null)
+				implementList = new LinkedList<ClassOrInterfaceType>();
+
+			for (ClassOrInterfaceType id : implementList) {
+				classInfo.implementedInterfaces.add(getClassName(packageName, id.toString(), imports));
+			}
+			
+			classInfo.isEnum = false;
+		} else if (td instanceof EnumDeclaration) {
+			classInfo.isEnum = true;
 		}
 
-		List<AnnotationExpr> annotationList = cid.getAnnotations();
+		List<AnnotationExpr> annotationList = td.getAnnotations();
 		
 		if (annotationList == null)
 			annotationList = new LinkedList<AnnotationExpr>();
@@ -119,7 +131,7 @@ class ClassVisitor extends VoidVisitorAdapter {
 			classInfo.annotations.add(annotation);
 		}
 
-		List<BodyDeclaration> bodyDeclarationList = cid.getMembers();
+		List<BodyDeclaration> bodyDeclarationList = td.getMembers();
 		if (bodyDeclarationList == null)
 			bodyDeclarationList = new LinkedList<BodyDeclaration>();
 		
@@ -208,14 +220,20 @@ class ClassVisitor extends VoidVisitorAdapter {
 		super.visit(n, arg);
 	}
 
+	private void visit(TypeDeclaration td) {
+		currentClass = getClassInfo(currentClass, currentPackage, imports, td);
+		sourceFileInfo.classes.add(currentClass);
+	}
+	
+	@Override
+	public void visit(EnumDeclaration n, Object arg) {
+		visit(n);
+		super.visit(n, arg);
+	}
+	
 	@Override
 	public void visit(ClassOrInterfaceDeclaration n, Object arg) {
-		ClassInfo parentClass = currentClass;
-		
-		currentClass = getClassInfo(currentClass, currentPackage, imports, n);
-		currentClass.parentClass = parentClass;
-		
-		sourceFileInfo.classes.add(currentClass);
+		visit(n);
 		super.visit(n, arg);
 	}
 	// =========================================================================
