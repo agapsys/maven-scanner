@@ -22,8 +22,8 @@ import com.github.javaparser.ast.CompilationUnit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Represents a source file structure
@@ -61,6 +61,6 @@ public class SourceFileInfo {
 	// =========================================================================
 
 	// INSTANCE SCOPE ==========================================================
-	public final List<ClassInfo> classes = new LinkedList<ClassInfo>();
+	public final Set<ClassInfo> classes = new LinkedHashSet<ClassInfo>();
 	// =========================================================================
 }

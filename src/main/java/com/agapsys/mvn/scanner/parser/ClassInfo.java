@@ -33,4 +33,27 @@ public class ClassInfo {
 	public final List<AnnotationInfo> annotations = new LinkedList<AnnotationInfo>();
 	public final List<String>         implementedInterfaces = new LinkedList<String>();
 	public final List<MethodInfo>     methods = new LinkedList<MethodInfo>();
+
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 19 * hash + (this.className != null ? this.className.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final ClassInfo other = (ClassInfo) obj;
+		if ((this.className == null) ? (other.className != null) : !this.className.equals(other.className)) {
+			return false;
+		}
+		return true;
+	}
+
 }

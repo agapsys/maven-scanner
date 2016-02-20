@@ -21,6 +21,7 @@ import com.agapsys.mvn.scanner.parser.ClassInfo;
 import com.agapsys.mvn.scanner.parser.ParsingException;
 import com.agapsys.mvn.scanner.parser.SourceFileInfo;
 import java.io.File;
+import java.util.Iterator;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -32,7 +33,9 @@ public class VisitorTest {
 		SourceFileInfo srcFileInfo = SourceFileInfo.getInfo(new File("TestClass.java"));
 		Assert.assertEquals(2, srcFileInfo.classes.size());
 
-		classInfo = srcFileInfo.classes.get(0);
+		Iterator<ClassInfo> iterator = srcFileInfo.classes.iterator();
+		
+		classInfo = iterator.next();
 
 		Assert.assertEquals(2, classInfo.annotations.size());
 
@@ -67,7 +70,7 @@ public class VisitorTest {
 		Assert.assertEquals("aa.bb.cc.dd.Annotation1", classInfo.methods.get(4).annotations.get(0).className);
 
 		// Inner class
-		classInfo = srcFileInfo.classes.get(1);
+		classInfo = iterator.next();
 		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass", classInfo.className);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerClass", classInfo.reflectionClassName);
 	}
