@@ -45,6 +45,10 @@ public class TestClass extends SuperClass1 implements SuperInterface1, aa.bb.cc.
 		a.c.b method2() {}
 	}
 	
+	static enum InnerEnum {
+		A, B, C;
+	}
+	
 	public TestClass() {}
 		
 	public int publicMethod() {}

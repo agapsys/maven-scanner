@@ -20,6 +20,7 @@ import com.agapsys.mvn.scanner.parser.AnnotationInfo;
 import com.agapsys.mvn.scanner.parser.ClassInfo;
 import com.agapsys.mvn.scanner.parser.ParsingException;
 import com.agapsys.mvn.scanner.parser.SourceFileInfo;
+import com.agapsys.mvn.scanner.parser.Visibility;
 import java.io.File;
 import java.util.Iterator;
 import junit.framework.Assert;
@@ -31,7 +32,7 @@ public class VisitorTest {
 	public void test() throws ParsingException {
 		ClassInfo classInfo;
 		SourceFileInfo srcFileInfo = SourceFileInfo.getInfo(new File("TestClass.java"));
-		Assert.assertEquals(2, srcFileInfo.classes.size());
+		Assert.assertEquals(3, srcFileInfo.classes.size());
 
 		Iterator<ClassInfo> iterator = srcFileInfo.classes.iterator();
 		
@@ -75,5 +76,10 @@ public class VisitorTest {
 		Assert.assertEquals("com.agapsys.src.parser.TestClass.InnerClass", classInfo.className);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass$InnerClass", classInfo.reflectionClassName);
 		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.containerClass.className);
+		
+		// Inner enum
+		classInfo = iterator.next();
+		Assert.assertTrue(classInfo.isEnum);
+		Assert.assertEquals(Visibility.DEFAULT, classInfo.visibility);
 	}
 }
