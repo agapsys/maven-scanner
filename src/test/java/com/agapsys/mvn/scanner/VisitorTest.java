@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.agapsys.src.parser;
+package com.agapsys.mvn.scanner;
 
 import com.agapsys.mvn.scanner.parser.AnnotationInfo;
 import com.agapsys.mvn.scanner.parser.ClassInfo;
