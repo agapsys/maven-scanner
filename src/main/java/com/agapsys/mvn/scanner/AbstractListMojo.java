@@ -53,7 +53,7 @@ public abstract class AbstractListMojo extends AbstractMojo {
 			srcDirList.add(mavenProject.getBuild().getTestSourceDirectory());
 
 		for (String srcDir : srcDirList) {
-			List<ClassInfo> filteredClasses = srcDirectoryScanner.getFilteredClasses(new File(srcDir));
+			Set<ClassInfo> filteredClasses = srcDirectoryScanner.getFilteredClasses(new File(srcDir));
 
 			for (ClassInfo classInfo : filteredClasses) {
 				scanInfoInstance.addClassInfo(classInfo);

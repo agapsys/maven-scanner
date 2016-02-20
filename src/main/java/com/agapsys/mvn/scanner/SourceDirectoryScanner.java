@@ -20,8 +20,8 @@ import com.agapsys.mvn.scanner.parser.ClassInfo;
 import com.agapsys.mvn.scanner.parser.ParsingException;
 import com.agapsys.mvn.scanner.parser.SourceFileInfo;
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public abstract class SourceDirectoryScanner {
 	/**
@@ -30,7 +30,7 @@ public abstract class SourceDirectoryScanner {
 	 * @return List containing filtered classes
 	 * @throws ParsingException if an error happened during parsing.
 	 */
-	public final List<ClassInfo> getFilteredClasses(File srcDir) throws ParsingException {
+	public final Set<ClassInfo> getFilteredClasses(File srcDir) throws ParsingException {
 		return parseDirectory(srcDir, null);
 	}
 
@@ -44,36 +44,36 @@ public abstract class SourceDirectoryScanner {
 	/**
 	 * Parses a directory
 	 * @param srcDir directory to be analyzed
-	 * @param classInfoList list which will contain returned results. On non-recursive calls, pass null.
+	 * @param classInfoSet set which will contain returned results. On non-recursive calls, pass null.
 	 * @throws ParsingException if an error happened during parsing.
 	 */
-	private List<ClassInfo> parseDirectory(File srcDir, List<ClassInfo> classInfoList) throws ParsingException {
-		if (classInfoList == null)
-			classInfoList = new LinkedList<ClassInfo>();
+	private Set<ClassInfo> parseDirectory(File srcDir, Set<ClassInfo> classInfoSet) throws ParsingException {
+		if (classInfoSet == null)
+			classInfoSet = new LinkedHashSet<ClassInfo>();
 
 		for (File file : srcDir.listFiles()) {
 			if (file.isDirectory()) {
-				parseDirectory(file, classInfoList);
+				parseDirectory(file, classInfoSet);
 			} else {
-				parseFile(file, classInfoList);
+				parseFile(file, classInfoSet);
 			}
 		}
 
-		return classInfoList;
+		return classInfoSet;
 	}
 
 	/**
 	 * Parses a source file
 	 * @param srcFile source file to be analyzed.
-	 * @param classInfoList list which will contain returned results.
+	 * @param classInfoSet list which will contain returned results.
 	 * @throws ParsingException if an error happened during parsing.
 	 */
-	private void parseFile(File srcFile, List<ClassInfo> classInfoList) throws ParsingException {
+	private void parseFile(File srcFile, Set<ClassInfo> classInfoSet) throws ParsingException {
 		SourceFileInfo srcFileInfo = SourceFileInfo.getInfo(srcFile);
 
 		for (ClassInfo classInfo : srcFileInfo.classes) {
 			if (isValid(classInfo))
-				classInfoList.add(classInfo);
+				classInfoSet.add(classInfo);
 		}
 	}
 }
