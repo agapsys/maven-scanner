@@ -21,7 +21,7 @@ import com.example.Type;
 import f.g.h.Annotation1;
 import f.g.h.Annotation2;
 
-@Annotation1(a=1, b=2, c="abc", d=com.example1.Type.VALUE, e=Type.VALUE, f=1.0, g=1.0f)
+@Annotation1(a=1)
 @Annotation4
 public class TestClass extends SuperClass1 implements SuperInterface1, aa.bb.cc.dd.SuperInterface1 {
 	@Annotation2

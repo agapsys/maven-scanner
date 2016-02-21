@@ -16,16 +16,12 @@
 
 package com.agapsys.mvn.scanner.parser;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * Represents an annotation information
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class AnnotationInfo {
 	public String className;
-	public final Map<String, String> properties = new LinkedHashMap<String, String>();
 
 	@Override
 	public String toString() {

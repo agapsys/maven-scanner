@@ -48,18 +48,9 @@ public class VisitorTest {
 		// Annotations...
 		AnnotationInfo annotationInfo = classInfo.annotations.get(0);
 		Assert.assertEquals("f.g.h.Annotation1", annotationInfo.className);
-		Assert.assertEquals(7, annotationInfo.properties.size());
-		Assert.assertEquals("1", annotationInfo.properties.get("a"));
-		Assert.assertEquals("2", annotationInfo.properties.get("b"));
-		Assert.assertEquals("\"abc\"", annotationInfo.properties.get("c"));
-		Assert.assertEquals("com.example1.Type.VALUE", annotationInfo.properties.get("d"));
-		Assert.assertEquals("com.example.Type.VALUE", annotationInfo.properties.get("e"));
-		Assert.assertEquals("1.0", annotationInfo.properties.get("f"));
-		Assert.assertEquals("1.0f", annotationInfo.properties.get("g"));
 
 		annotationInfo = classInfo.annotations.get(1);
 		Assert.assertEquals("com.agapsys.src.parser.Annotation4", annotationInfo.className);
-		Assert.assertEquals(0, annotationInfo.properties.size());
 
 		// Class info...
 		Assert.assertEquals("com.agapsys.src.parser.TestClass", classInfo.className);

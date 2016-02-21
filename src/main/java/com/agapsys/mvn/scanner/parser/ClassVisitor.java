@@ -29,7 +29,6 @@ import com.github.javaparser.ast.expr.DoubleLiteralExpr;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.LongLiteralExpr;
-import com.github.javaparser.ast.expr.MemberValuePair;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
@@ -154,17 +153,6 @@ class ClassVisitor extends VoidVisitorAdapter {
 	private static AnnotationInfo getAnnotationInfo(String packgeName, List<String> imports, AnnotationExpr ae) {
 		AnnotationInfo annotation = new AnnotationInfo();
 		annotation.className = getClassName(packgeName, ae.getName().toString(), imports);
-		if (ae.getChildrenNodes().size() > 1) {
-			for (int i = 1; i < ae.getChildrenNodes().size(); i++) {
-				MemberValuePair pair = (MemberValuePair) ae.getChildrenNodes().get(i);
-				String name = pair.getName();
-
-				String value = getAnnotationParamValue(packgeName, pair.getValue(), imports);
-
-				annotation.properties.put(name, value);
-			}
-		}
-
 		return annotation;
 	}
 
