@@ -42,6 +42,8 @@ public abstract class SourceDirectoryScanner {
 	 */
 	protected abstract boolean shallBeIncluded(ClassInfo classInfo) throws ParsingException;
 
+	protected void beforeInclude(ClassInfo classInfo) {}
+	
 	/**
 	 * Parses a directory
 	 * @param srcDirOrFile directory or source file to be analyzed
@@ -78,8 +80,10 @@ public abstract class SourceDirectoryScanner {
 		SourceFileInfo srcFileInfo = SourceFileInfo.getInfo(srcFile);
 
 		for (ClassInfo classInfo : srcFileInfo.classes) {
-			if (shallBeIncluded(classInfo))
+			if (shallBeIncluded(classInfo)) {
+				beforeInclude(classInfo);
 				classInfoSet.add(classInfo);
+			}
 		}
 	}
 }
