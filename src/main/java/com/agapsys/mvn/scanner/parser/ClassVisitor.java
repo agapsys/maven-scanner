@@ -38,27 +38,26 @@ import java.util.regex.Pattern;
 
 /**
  * Source file parser
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 class ClassVisitor extends VoidVisitorAdapter {
     // CLASS SCOPE =============================================================
     private static String getClassName(String packageName, String identifier, List<String> imports) {
         int genericBegin = identifier.indexOf("<");
         int genericEnd = identifier.lastIndexOf(">");
-        
+
         if (genericBegin != -1 && genericEnd != -1) {
             String genericSubStr = identifier.substring(genericBegin, genericEnd + 1);
             identifier = identifier.replaceAll(Pattern.quote(genericSubStr), "");
         }
-            
+
         for (String importStr : imports) {
             if (importStr.endsWith("." + identifier))
                 return importStr;
         }
 
-        if (!identifier.contains("."))        
+        if (!identifier.contains("."))
             return packageName + "." + identifier;
-        
+
         return identifier;
     }
 
@@ -105,33 +104,33 @@ class ClassVisitor extends VoidVisitorAdapter {
         classInfo.reflectionClassName = getReflectionClassName(packageName, containerClass == null ? "" : containerClass.reflectionClassName, td.getName().toString());
         classInfo.visibility = Visibility.fromModifiers(td.getModifiers());
         classInfo.isAbstract = ModifierSet.isAbstract(td.getModifiers());
-        
+
         if (td instanceof ClassOrInterfaceDeclaration) {
             ClassOrInterfaceDeclaration cid = (ClassOrInterfaceDeclaration) td;
             classInfo.isInterface = cid.isInterface();
-        
-            List extendsList = cid.getExtends();        
+
+            List extendsList = cid.getExtends();
             classInfo.superclassName = extendsList == null || extendsList.isEmpty() ? null : getClassName(packageName, extendsList.get(0).toString(), imports);
 
             List<ClassOrInterfaceType> implementList = cid.getImplements();
-        
+
             if (implementList == null)
                 implementList = new LinkedList<ClassOrInterfaceType>();
 
             for (ClassOrInterfaceType id : implementList) {
                 classInfo.implementedInterfaces.add(getClassName(packageName, id.toString(), imports));
             }
-            
+
             classInfo.isEnum = false;
         } else if (td instanceof EnumDeclaration) {
             classInfo.isEnum = true;
         }
 
         List<AnnotationExpr> annotationList = td.getAnnotations();
-        
+
         if (annotationList == null)
             annotationList = new LinkedList<AnnotationExpr>();
-        
+
         for (AnnotationExpr ae : annotationList) {
             AnnotationInfo annotation = getAnnotationInfo(packageName, imports, ae);
             classInfo.annotations.add(annotation);
@@ -140,7 +139,7 @@ class ClassVisitor extends VoidVisitorAdapter {
         List<BodyDeclaration> bodyDeclarationList = td.getMembers();
         if (bodyDeclarationList == null)
             bodyDeclarationList = new LinkedList<BodyDeclaration>();
-        
+
         for (BodyDeclaration member : bodyDeclarationList) {
             if (member instanceof MethodDeclaration) {
                 classInfo.methods.add(getMethodInfo(packageName, imports, (MethodDeclaration) member));
@@ -218,13 +217,13 @@ class ClassVisitor extends VoidVisitorAdapter {
         ClassInfo classInfo = getClassInfo(sourceFileInfo, currentPackage, imports, td);
         sourceFileInfo.classes.add(classInfo);
     }
-    
+
     @Override
     public void visit(EnumDeclaration n, Object arg) {
         visit(n);
         super.visit(n, arg);
     }
-    
+
     @Override
     public void visit(ClassOrInterfaceDeclaration n, Object arg) {
         visit(n);

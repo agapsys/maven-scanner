@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  * Represents a method information
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class MethodInfo {
     public Visibility visibility;

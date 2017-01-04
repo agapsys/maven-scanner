@@ -30,7 +30,6 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * Base LIST Mojo.
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public abstract class AbstractListMojo extends AbstractMojo {
     // STATIC SCOPE ============================================================

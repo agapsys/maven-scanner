@@ -31,7 +31,6 @@ import java.util.TreeSet;
 
 /**
  * Scan information
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public abstract class ScanInfo {
     private final Set<String> entryList = new TreeSet<String>();

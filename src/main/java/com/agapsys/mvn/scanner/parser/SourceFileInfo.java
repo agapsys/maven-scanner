@@ -27,7 +27,6 @@ import java.util.Set;
 
 /**
  * Represents a source file structure
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class SourceFileInfo {
     // STATIC SCOPE ============================================================
@@ -64,20 +63,20 @@ public class SourceFileInfo {
     private SourceFileInfo(File srcFile) {
         this.sourceFile = srcFile;
     }
-    
+
     public final File sourceFile;
-    
+
     public final Set<ClassInfo> classes = new LinkedHashSet<ClassInfo>();
-    
+
     public ClassInfo getClassInfoByClassName(String className) {
         for (ClassInfo classInfo : classes) {
             if (classInfo.className.equals(className))
                 return classInfo;
         }
-        
+
         return null;
     }
-    
+
     public ClassInfo getClassInfoBySimpleName(String simpleName) {
         // According to JLS, inner classes must have unique name inside enclosing classes:
         // http://stackoverflow.com/a/24214835
@@ -85,12 +84,12 @@ public class SourceFileInfo {
             if (classInfo.getSimpleName().equals(simpleName))
                 return classInfo;
         }
-        
+
         return null;
-        
+
     }
-    
-    
+
+
     @Override
     public String toString() {
         return sourceFile.toString();

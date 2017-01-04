@@ -22,7 +22,6 @@ import java.io.IOException;
 
 /**
  * File Handling utilities
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class FileUtils {
     // CLASS SCOPE =============================================================
@@ -46,26 +45,26 @@ public class FileUtils {
             super(message, cause, enableSuppression, writableStackTrace);
         }
     }
-    
+
     /** Default folder delimiter. */
     public static final String FOLDER_DELIMITER;
-    
+
     /** Current user folder. */
     public static final File USER_HOME;
-    
+
     /** Default temporary folder. */
     public static final File DEFAULT_TEMPORARY_FOLDER;
-    
+
     /** Current Operating System. */
     public static final String OS_NAME;
-    
+
     static {
         FOLDER_DELIMITER = System.getProperty("file.separator");
         USER_HOME = new File(System.getProperty("user.home"));
         DEFAULT_TEMPORARY_FOLDER = new File(System.getProperty("java.io.tmpdir"));
         OS_NAME = System.getProperty("os.name");
     }
-    
+
     /**
      * @return a file representing a given path. If directory hierarchy does not exist, they will be created.
      * @param path directory path
@@ -81,7 +80,7 @@ public class FileUtils {
             if (!folder.isDirectory())
                 throw new IllegalArgumentException(String.format("Path '%s' is a file", path));
         }
-        
+
         if(OS_NAME.toLowerCase().contains("win") && folder.getName().startsWith(".")) {
             try {
                 Runtime.getRuntime().exec("attrib +H "+folder.getAbsolutePath());
@@ -89,8 +88,8 @@ public class FileUtils {
         }
         return folder;
     }
-    
-    /** 
+
+    /**
      * Deletes a file.
      * If given file is a folder, delete its contents also.
      * @param file file to delete
@@ -99,25 +98,25 @@ public class FileUtils {
     public static void deleteFile(File file) throws FileNotFoundException {
         if (file == null)
             throw new IllegalArgumentException("Null file");
-        
+
         if (!file.exists())
             throw new FileNotFoundException(String.format("File not found: %s", file.getAbsolutePath()));
-        
+
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-            
+
             for (File tmpFile : files) {
                 deleteFile(tmpFile); // recursive
             }
-            
+
             file.delete();
         } else {
             file.delete();
         }
     }
     // =========================================================================
-    
+
     // INSTANCE SCOPE ==========================================================
-    private FileUtils() {} 
+    private FileUtils() {}
     // =========================================================================
 }

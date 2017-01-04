@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 
 /**
  * Represents a class information
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class ClassInfo {
     public Visibility     visibility;
@@ -65,12 +64,12 @@ public class ClassInfo {
     public String toString() {
         return className;
     }
-    
+
     public String getSimpleName() {
         String[] components = className.split(Pattern.quote("."));
         return components[components.length - 1];
     }
-    
+
     public boolean isTopClass() {
         return containerClass == null;
     }

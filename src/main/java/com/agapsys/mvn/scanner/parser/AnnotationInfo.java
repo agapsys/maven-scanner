@@ -18,7 +18,6 @@ package com.agapsys.mvn.scanner.parser;
 
 /**
  * Represents an annotation information
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class AnnotationInfo {
     public String className;

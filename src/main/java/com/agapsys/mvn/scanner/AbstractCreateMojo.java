@@ -26,7 +26,6 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * Base CREATE Mojo.
- * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public abstract class AbstractCreateMojo extends AbstractMojo {
 
