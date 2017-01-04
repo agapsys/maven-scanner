@@ -30,63 +30,63 @@ import org.apache.maven.project.MavenProject;
  */
 public abstract class AbstractCreateMojo extends AbstractMojo {
 
-	protected abstract MavenProject getMavenProject();
+    protected abstract MavenProject getMavenProject();
 
-	protected boolean includeDependencies() {
-		return false;
-	}
+    protected boolean includeDependencies() {
+        return false;
+    }
 
-	protected boolean includeTests() {
-		return false;
-	}
+    protected boolean includeTests() {
+        return false;
+    }
 
-	protected abstract ScannerDefs getScannerDefs();
+    protected abstract ScannerDefs getScannerDefs();
 
-	@Override
-	public void execute() throws MojoExecutionException {
-		try {
+    @Override
+    public void execute() throws MojoExecutionException {
+        try {
 
-			ScannerDefs defs = getScannerDefs();
-			MavenProject mavenProject = getMavenProject();
-			ScanInfo scanInfo = defs.getScanInfoInstance();
-			boolean includeTests = includeTests();
+            ScannerDefs defs = getScannerDefs();
+            MavenProject mavenProject = getMavenProject();
+            ScanInfo scanInfo = defs.getScanInfoInstance();
+            boolean includeTests = includeTests();
 
-			AbstractListMojo.setScanInfo(
-				mavenProject,
-				defs.getSourceDirectoryScanner(),
-				scanInfo,
-				defs.getEmbeddedScanInfoFilePath(),
-				defs.getEmbeddedScanInfoFileEncoding(),
-				includeDependencies(),
-				includeTests
-			);
+            AbstractListMojo.setScanInfo(
+                mavenProject,
+                defs.getSourceDirectoryScanner(),
+                scanInfo,
+                defs.getEmbeddedScanInfoFilePath(),
+                defs.getEmbeddedScanInfoFileEncoding(),
+                includeDependencies(),
+                includeTests
+            );
 
-			String outputDirectoryPath = String.format(
-				"%s%s%s",
-				includeTests ? mavenProject.getBuild().getTestOutputDirectory() :  mavenProject.getBuild().getOutputDirectory(),
-				FileUtils.FOLDER_DELIMITER,
-				defs.getEmbeddedScanInfoFileDirectory()
-			);
+            String outputDirectoryPath = String.format(
+                "%s%s%s",
+                includeTests ? mavenProject.getBuild().getTestOutputDirectory() :  mavenProject.getBuild().getOutputDirectory(),
+                FileUtils.FOLDER_DELIMITER,
+                defs.getEmbeddedScanInfoFileDirectory()
+            );
 
-			File outputDirectory = FileUtils.getOrCreateDirectory(outputDirectoryPath);
-			File outputFile = new File(outputDirectory, defs.getEmbeddedScanInfoFilename());
+            File outputDirectory = FileUtils.getOrCreateDirectory(outputDirectoryPath);
+            File outputFile = new File(outputDirectory, defs.getEmbeddedScanInfoFilename());
 
-			String ioErrMsg = "Error generating file: " + outputFile.getAbsolutePath();
+            String ioErrMsg = "Error generating file: " + outputFile.getAbsolutePath();
 
-			try {
-				PrintWriter writer = new PrintWriter(outputFile);
+            try {
+                PrintWriter writer = new PrintWriter(outputFile);
 
-				for (String entry : scanInfo.getEntries()) {
-					writer.println(entry);
-				}
+                for (String entry : scanInfo.getEntries()) {
+                    writer.println(entry);
+                }
 
-				writer.close();
-			} catch (IOException ex) {
-				throw new MojoExecutionException(ioErrMsg);
-			}
+                writer.close();
+            } catch (IOException ex) {
+                throw new MojoExecutionException(ioErrMsg);
+            }
 
-		} catch (ParsingException ex) {
-			throw new MojoExecutionException(ex.getMessage());
-		}
-	}
+        } catch (ParsingException ex) {
+            throw new MojoExecutionException(ex.getMessage());
+        }
+    }
 }

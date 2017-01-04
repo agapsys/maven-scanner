@@ -24,66 +24,66 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public abstract class SourceDirectoryScanner {
-	/**
-	 * Parse a source directory
-	 * @param srcDirOrFile source directory to be analyzed.
-	 * @return List containing filtered classes
-	 * @throws ParsingException if an error happened during parsing.
-	 */
-	public final Set<ClassInfo> getFilteredClasses(File srcDirOrFile) throws ParsingException {
-		return parseDirOrFile(srcDirOrFile, null);
-	}
+    /**
+     * Parse a source directory
+     * @param srcDirOrFile source directory to be analyzed.
+     * @return List containing filtered classes
+     * @throws ParsingException if an error happened during parsing.
+     */
+    public final Set<ClassInfo> getFilteredClasses(File srcDirOrFile) throws ParsingException {
+        return parseDirOrFile(srcDirOrFile, null);
+    }
 
-	/**
-	 * Returns a boolean indicating if given class information shall be included in processed scan information.
-	 * @param classInfo class information to be evaluated
-	 * @return boolean indicating if given class information shall be included in processed scan information.
-	 * @throws ParsingException if there is an error while processing the class information.
-	 */
-	protected abstract boolean shallBeIncluded(ClassInfo classInfo) throws ParsingException;
+    /**
+     * Returns a boolean indicating if given class information shall be included in processed scan information.
+     * @param classInfo class information to be evaluated
+     * @return boolean indicating if given class information shall be included in processed scan information.
+     * @throws ParsingException if there is an error while processing the class information.
+     */
+    protected abstract boolean shallBeIncluded(ClassInfo classInfo) throws ParsingException;
 
-	protected void beforeInclude(ClassInfo classInfo) {}
-	
-	/**
-	 * Parses a directory
-	 * @param srcDirOrFile directory or source file to be analyzed
-	 * @param classInfoSet set which will contain returned results. On non-recursive calls, pass null.
-	 * @throws ParsingException if an error happened during parsing.
-	 */
-	private Set<ClassInfo> parseDirOrFile(File srcDirOrFile, Set<ClassInfo> classInfoSet) throws ParsingException {
-		if (classInfoSet == null)
-			classInfoSet = new LinkedHashSet<ClassInfo>();
+    protected void beforeInclude(ClassInfo classInfo) {}
+    
+    /**
+     * Parses a directory
+     * @param srcDirOrFile directory or source file to be analyzed
+     * @param classInfoSet set which will contain returned results. On non-recursive calls, pass null.
+     * @throws ParsingException if an error happened during parsing.
+     */
+    private Set<ClassInfo> parseDirOrFile(File srcDirOrFile, Set<ClassInfo> classInfoSet) throws ParsingException {
+        if (classInfoSet == null)
+            classInfoSet = new LinkedHashSet<ClassInfo>();
 
-		if (srcDirOrFile.isFile()) {
-			parseFile(srcDirOrFile, classInfoSet);
-		} else {
-			for (File file : srcDirOrFile.listFiles()) {
-				if (file.isDirectory()) {
-					parseDirOrFile(file, classInfoSet);
-				} else {
-					if (file.getName().endsWith(".java")) 
-						parseFile(file, classInfoSet);
-				}
-			}
-		}
+        if (srcDirOrFile.isFile()) {
+            parseFile(srcDirOrFile, classInfoSet);
+        } else {
+            for (File file : srcDirOrFile.listFiles()) {
+                if (file.isDirectory()) {
+                    parseDirOrFile(file, classInfoSet);
+                } else {
+                    if (file.getName().endsWith(".java")) 
+                        parseFile(file, classInfoSet);
+                }
+            }
+        }
 
-		return classInfoSet;
-	}
+        return classInfoSet;
+    }
 
-	/**
-	 * Parses a source file
-	 * @param srcFile source file to be analyzed.
-	 * @param classInfoSet list which will contain returned results.
-	 * @throws ParsingException if an error happened during parsing.
-	 */
-	private void parseFile(File srcFile, Set<ClassInfo> classInfoSet) throws ParsingException {
-		SourceFileInfo srcFileInfo = SourceFileInfo.getInfo(srcFile);
+    /**
+     * Parses a source file
+     * @param srcFile source file to be analyzed.
+     * @param classInfoSet list which will contain returned results.
+     * @throws ParsingException if an error happened during parsing.
+     */
+    private void parseFile(File srcFile, Set<ClassInfo> classInfoSet) throws ParsingException {
+        SourceFileInfo srcFileInfo = SourceFileInfo.getInfo(srcFile);
 
-		for (ClassInfo classInfo : srcFileInfo.classes) {
-			if (shallBeIncluded(classInfo)) {
-				beforeInclude(classInfo);
-				classInfoSet.add(classInfo);
-			}
-		}
-	}
+        for (ClassInfo classInfo : srcFileInfo.classes) {
+            if (shallBeIncluded(classInfo)) {
+                beforeInclude(classInfo);
+                classInfoSet.add(classInfo);
+            }
+        }
+    }
 }

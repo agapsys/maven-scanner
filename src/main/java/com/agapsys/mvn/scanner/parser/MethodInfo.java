@@ -24,14 +24,14 @@ import java.util.List;
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class MethodInfo {
-	public Visibility visibility;
-	public String     name;
-	public String     signature;
-	public boolean    isStatic;
-	public final List<AnnotationInfo> annotations = new LinkedList<AnnotationInfo>();
+    public Visibility visibility;
+    public String     name;
+    public String     signature;
+    public boolean    isStatic;
+    public final List<AnnotationInfo> annotations = new LinkedList<AnnotationInfo>();
 
-	@Override
-	public String toString() {
-		return signature;
-	}
+    @Override
+    public String toString() {
+        return signature;
+    }
 }

@@ -33,91 +33,91 @@ import org.apache.maven.project.MavenProject;
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public abstract class AbstractListMojo extends AbstractMojo {
-	// STATIC SCOPE ============================================================
-	static void setScanInfo(
-		MavenProject mavenProject,
-		SourceDirectoryScanner srcDirectoryScanner,
-		ScanInfo scanInfoInstance,
-		String embeddedScanInfoFilePath,
-		String embeddedScanInfoFileEncoding,
-		boolean includeDependencies,
-		boolean includeTest
-	) throws ParsingException {
+    // STATIC SCOPE ============================================================
+    static void setScanInfo(
+        MavenProject mavenProject,
+        SourceDirectoryScanner srcDirectoryScanner,
+        ScanInfo scanInfoInstance,
+        String embeddedScanInfoFilePath,
+        String embeddedScanInfoFileEncoding,
+        boolean includeDependencies,
+        boolean includeTest
+    ) throws ParsingException {
 
-		// Scan sources...
-		List<String> srcDirList = new LinkedList<String>();
-		srcDirList.add(mavenProject.getBuild().getSourceDirectory());
+        // Scan sources...
+        List<String> srcDirList = new LinkedList<String>();
+        srcDirList.add(mavenProject.getBuild().getSourceDirectory());
 
-		if (includeTest)
-			srcDirList.add(mavenProject.getBuild().getTestSourceDirectory());
+        if (includeTest)
+            srcDirList.add(mavenProject.getBuild().getTestSourceDirectory());
 
-		for (String srcDir : srcDirList) {
-			Set<ClassInfo> filteredClasses = srcDirectoryScanner.getFilteredClasses(new File(srcDir));
+        for (String srcDir : srcDirList) {
+            Set<ClassInfo> filteredClasses = srcDirectoryScanner.getFilteredClasses(new File(srcDir));
 
-			for (ClassInfo classInfo : filteredClasses) {
-				scanInfoInstance.addClassInfo(classInfo);
-			}
-		}
+            for (ClassInfo classInfo : filteredClasses) {
+                scanInfoInstance.addClassInfo(classInfo);
+            }
+        }
 
-		// Scan dependencies...
-		if (includeDependencies) {
-			Set<Artifact> dependencies = new LinkedHashSet<Artifact>();
-			dependencies.addAll(mavenProject.getArtifacts());
+        // Scan dependencies...
+        if (includeDependencies) {
+            Set<Artifact> dependencies = new LinkedHashSet<Artifact>();
+            dependencies.addAll(mavenProject.getArtifacts());
 
-			if (includeTest)
-				dependencies.addAll(mavenProject.getTestArtifacts());
+            if (includeTest)
+                dependencies.addAll(mavenProject.getTestArtifacts());
 
-			for (Artifact artifact : dependencies) {
-				scanInfoInstance.addJar(artifact.getFile(), embeddedScanInfoFilePath, embeddedScanInfoFileEncoding);
-			}
-		}
-	}
-	// =========================================================================
+            for (Artifact artifact : dependencies) {
+                scanInfoInstance.addJar(artifact.getFile(), embeddedScanInfoFilePath, embeddedScanInfoFileEncoding);
+            }
+        }
+    }
+    // =========================================================================
 
-	// INSTANCE SCOPE ==========================================================
-	protected abstract MavenProject getMavenProject();
+    // INSTANCE SCOPE ==========================================================
+    protected abstract MavenProject getMavenProject();
 
-	protected boolean includeDependencies() {
-		return true;
-	}
+    protected boolean includeDependencies() {
+        return true;
+    }
 
-	protected boolean includeTests() {
-		return false;
-	}
+    protected boolean includeTests() {
+        return false;
+    }
 
-	protected abstract String getFilterPropertyName();
+    protected abstract String getFilterPropertyName();
 
-	protected abstract String getExposedEntry(String scanInfoEntry);
+    protected abstract String getExposedEntry(String scanInfoEntry);
 
-	protected abstract ScannerDefs getScannerDefs();
+    protected abstract ScannerDefs getScannerDefs();
 
-	@Override
-	public void execute() throws MojoExecutionException {
-		try {
+    @Override
+    public void execute() throws MojoExecutionException {
+        try {
 
-			ScannerDefs defs = getScannerDefs();
+            ScannerDefs defs = getScannerDefs();
 
-			MavenProject mavenProject = getMavenProject();
-			ScanInfo scanInfo = defs.getScanInfoInstance();
+            MavenProject mavenProject = getMavenProject();
+            ScanInfo scanInfo = defs.getScanInfoInstance();
 
-			setScanInfo(mavenProject,
-				defs.getSourceDirectoryScanner(),
-				scanInfo,
-				defs.getEmbeddedScanInfoFilePath(),
-				defs.getEmbeddedScanInfoFileEncoding(),
-				includeDependencies(),
-				includeTests()
-			);
+            setScanInfo(mavenProject,
+                defs.getSourceDirectoryScanner(),
+                scanInfo,
+                defs.getEmbeddedScanInfoFilePath(),
+                defs.getEmbeddedScanInfoFileEncoding(),
+                includeDependencies(),
+                includeTests()
+            );
 
-			StringBuilder sb = new StringBuilder();
-			for (String scanInfoEntry : scanInfo.getEntries()) {
-				sb.append(getExposedEntry(scanInfoEntry));
-			}
+            StringBuilder sb = new StringBuilder();
+            for (String scanInfoEntry : scanInfo.getEntries()) {
+                sb.append(getExposedEntry(scanInfoEntry));
+            }
 
-			mavenProject.getProperties().setProperty(getFilterPropertyName(), sb.toString());
-		} catch (ParsingException ex) {
-			throw new MojoExecutionException(ex.getMessage());
-		}
-	}
-	// =========================================================================
+            mavenProject.getProperties().setProperty(getFilterPropertyName(), sb.toString());
+        } catch (ParsingException ex) {
+            throw new MojoExecutionException(ex.getMessage());
+        }
+    }
+    // =========================================================================
 }

@@ -24,48 +24,48 @@ import f.g.h.Annotation2;
 @Annotation1(a=1)
 @Annotation4
 public class TestClass extends SuperClass1 implements SuperInterface1, aa.bb.cc.dd.SuperInterface1 {
-	@Annotation2
-	protected static class InnerClass extends aa.bb.cc.dd.SuperInterface3 implements aa.bb.cc.dd.SuperInterface2 {
-		
-		private static class DeepClass {}
-		
-		public InnerClass() {}
-		
-		public int inner_publicMethod() {}
-		
-		public double inner_publicMethod1() {}
-		
-		public static String inner_publicMethod1(int arg) {}
-		
-		@Annotation1
-		private Type inner_privateMethod() {}
-		
-		@aa.bb.cc.dd.Annotation1
-		protected void inner_protectedMethod() {}
-		
-		void inner_defaultMethod() {}
-		
-		a.c.b method2() {}
-	}
-	
-	enum InnerEnum {
-		A, B, C;
-	}
-	
-	public TestClass() {}
-		
-	public int publicMethod() {}
-	
-	public double publicMethod1() {}
-	
-	public static String publicMethod1(int arg) {}
-	
-	private Type privateMethod() {}
-	
-	@aa.bb.cc.dd.Annotation1
-	protected void protectedMethod() {}
-	
-	void defaultMethod() {}
-	
-	a.b.c method3() {}
+    @Annotation2
+    protected static class InnerClass extends aa.bb.cc.dd.SuperInterface3 implements aa.bb.cc.dd.SuperInterface2 {
+        
+        private static class DeepClass {}
+        
+        public InnerClass() {}
+        
+        public int inner_publicMethod() {}
+        
+        public double inner_publicMethod1() {}
+        
+        public static String inner_publicMethod1(int arg) {}
+        
+        @Annotation1
+        private Type inner_privateMethod() {}
+        
+        @aa.bb.cc.dd.Annotation1
+        protected void inner_protectedMethod() {}
+        
+        void inner_defaultMethod() {}
+        
+        a.c.b method2() {}
+    }
+    
+    enum InnerEnum {
+        A, B, C;
+    }
+    
+    public TestClass() {}
+        
+    public int publicMethod() {}
+    
+    public double publicMethod1() {}
+    
+    public static String publicMethod1(int arg) {}
+    
+    private Type privateMethod() {}
+    
+    @aa.bb.cc.dd.Annotation1
+    protected void protectedMethod() {}
+    
+    void defaultMethod() {}
+    
+    a.b.c method3() {}
 }

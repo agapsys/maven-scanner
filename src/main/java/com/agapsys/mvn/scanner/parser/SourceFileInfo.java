@@ -30,71 +30,71 @@ import java.util.Set;
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class SourceFileInfo {
-	// STATIC SCOPE ============================================================
-	public static SourceFileInfo getInfo(File file) throws ParsingException {
-		SourceFileInfo info = new SourceFileInfo(file);
+    // STATIC SCOPE ============================================================
+    public static SourceFileInfo getInfo(File file) throws ParsingException {
+        SourceFileInfo info = new SourceFileInfo(file);
 
-		FileInputStream fis = null;
-		CompilationUnit cu = null;
+        FileInputStream fis = null;
+        CompilationUnit cu = null;
 
-		try {
-			fis = new FileInputStream(file);
-			cu = JavaParser.parse(fis);
-		} catch (ParseException ex) {
-			throw new ParsingException(ex);
-		} catch (IOException ex) {
-			throw new ParsingException(ex);
-		} finally {
-			try {
-				if (fis != null)
-					fis.close();
-			} catch (IOException ex) {
-				throw new ParsingException(ex);
-			}
-		}
+        try {
+            fis = new FileInputStream(file);
+            cu = JavaParser.parse(fis);
+        } catch (ParseException ex) {
+            throw new ParsingException(ex);
+        } catch (IOException ex) {
+            throw new ParsingException(ex);
+        } finally {
+            try {
+                if (fis != null)
+                    fis.close();
+            } catch (IOException ex) {
+                throw new ParsingException(ex);
+            }
+        }
 
-		ClassVisitor cv = new ClassVisitor(info);
-		cv.visit(cu, null);
+        ClassVisitor cv = new ClassVisitor(info);
+        cv.visit(cu, null);
 
-		return info;
-	}
-	// =========================================================================
+        return info;
+    }
+    // =========================================================================
 
-	// INSTANCE SCOPE ==========================================================
-	private SourceFileInfo(File srcFile) {
-		this.sourceFile = srcFile;
-	}
-	
-	public final File sourceFile;
-	
-	public final Set<ClassInfo> classes = new LinkedHashSet<ClassInfo>();
-	
-	public ClassInfo getClassInfoByClassName(String className) {
-		for (ClassInfo classInfo : classes) {
-			if (classInfo.className.equals(className))
-				return classInfo;
-		}
-		
-		return null;
-	}
-	
-	public ClassInfo getClassInfoBySimpleName(String simpleName) {
-		// According to JLS, inner classes must have unique name inside enclosing classes:
-		// http://stackoverflow.com/a/24214835
-		for (ClassInfo classInfo : classes) {
-			if (classInfo.getSimpleName().equals(simpleName))
-				return classInfo;
-		}
-		
-		return null;
-		
-	}
-	
-	
-	@Override
-	public String toString() {
-		return sourceFile.toString();
-	}
-	// =========================================================================
+    // INSTANCE SCOPE ==========================================================
+    private SourceFileInfo(File srcFile) {
+        this.sourceFile = srcFile;
+    }
+    
+    public final File sourceFile;
+    
+    public final Set<ClassInfo> classes = new LinkedHashSet<ClassInfo>();
+    
+    public ClassInfo getClassInfoByClassName(String className) {
+        for (ClassInfo classInfo : classes) {
+            if (classInfo.className.equals(className))
+                return classInfo;
+        }
+        
+        return null;
+    }
+    
+    public ClassInfo getClassInfoBySimpleName(String simpleName) {
+        // According to JLS, inner classes must have unique name inside enclosing classes:
+        // http://stackoverflow.com/a/24214835
+        for (ClassInfo classInfo : classes) {
+            if (classInfo.getSimpleName().equals(simpleName))
+                return classInfo;
+        }
+        
+        return null;
+        
+    }
+    
+    
+    @Override
+    public String toString() {
+        return sourceFile.toString();
+    }
+    // =========================================================================
 
 }

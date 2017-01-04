@@ -18,26 +18,26 @@ package com.agapsys.mvn.scanner;
 
 public abstract class ScannerDefs {
 
-	public abstract SourceDirectoryScanner getSourceDirectoryScanner();
+    public abstract SourceDirectoryScanner getSourceDirectoryScanner();
 
-	public abstract ScanInfo getScanInfoInstance();
+    public abstract ScanInfo getScanInfoInstance();
 
-	public String getEmbeddedScanInfoFileEncoding() {
-		return "UTF-8";
-	}
+    public String getEmbeddedScanInfoFileEncoding() {
+        return "UTF-8";
+    }
 
-	public abstract String getEmbeddedScanInfoFilename();
+    public abstract String getEmbeddedScanInfoFilename();
 
-	public String getEmbeddedScanInfoFileDirectory() {
-		return "META-INF";
-	}
+    public String getEmbeddedScanInfoFileDirectory() {
+        return "META-INF";
+    }
 
-	public final String getEmbeddedScanInfoFilePath() {
-		String scanInfoFilePath = String.format(
-			"%s/%s",
-			getEmbeddedScanInfoFileDirectory(), getEmbeddedScanInfoFilename()
-		);
+    public final String getEmbeddedScanInfoFilePath() {
+        String scanInfoFilePath = String.format(
+            "%s/%s",
+            getEmbeddedScanInfoFileDirectory(), getEmbeddedScanInfoFilename()
+        );
 
-		return scanInfoFilePath;
-	}
+        return scanInfoFilePath;
+    }
 }

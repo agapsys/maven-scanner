@@ -25,53 +25,53 @@ import java.util.regex.Pattern;
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class ClassInfo {
-	public Visibility     visibility;
-	public boolean        isAbstract;
-	public boolean        isInterface;
-	public boolean        isEnum;
-	public String         className;
-	public String         reflectionClassName;
-	public String         superclassName;
-	public ClassInfo      containerClass;
-	public boolean        isStaticNested;
-	public SourceFileInfo sourceFileInfo;
-	public final List<AnnotationInfo> annotations = new LinkedList<AnnotationInfo>();
-	public final List<String>         implementedInterfaces = new LinkedList<String>();
-	public final List<MethodInfo>     methods = new LinkedList<MethodInfo>();
+    public Visibility     visibility;
+    public boolean        isAbstract;
+    public boolean        isInterface;
+    public boolean        isEnum;
+    public String         className;
+    public String         reflectionClassName;
+    public String         superclassName;
+    public ClassInfo      containerClass;
+    public boolean        isStaticNested;
+    public SourceFileInfo sourceFileInfo;
+    public final List<AnnotationInfo> annotations = new LinkedList<AnnotationInfo>();
+    public final List<String>         implementedInterfaces = new LinkedList<String>();
+    public final List<MethodInfo>     methods = new LinkedList<MethodInfo>();
 
-	@Override
-	public int hashCode() {
-		int hash = 7;
-		hash = 19 * hash + (this.className != null ? this.className.hashCode() : 0);
-		return hash;
-	}
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + (this.className != null ? this.className.hashCode() : 0);
+        return hash;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final ClassInfo other = (ClassInfo) obj;
-		if ((this.className == null) ? (other.className != null) : !this.className.equals(other.className)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ClassInfo other = (ClassInfo) obj;
+        if ((this.className == null) ? (other.className != null) : !this.className.equals(other.className)) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return className;
-	}
-	
-	public String getSimpleName() {
-		String[] components = className.split(Pattern.quote("."));
-		return components[components.length - 1];
-	}
-	
-	public boolean isTopClass() {
-		return containerClass == null;
-	}
+    @Override
+    public String toString() {
+        return className;
+    }
+    
+    public String getSimpleName() {
+        String[] components = className.split(Pattern.quote("."));
+        return components[components.length - 1];
+    }
+    
+    public boolean isTopClass() {
+        return containerClass == null;
+    }
 }

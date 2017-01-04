@@ -34,59 +34,59 @@ import java.util.TreeSet;
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public abstract class ScanInfo {
-	private final Set<String> entryList = new TreeSet<String>();
+    private final Set<String> entryList = new TreeSet<String>();
 
-	public Set<String> getEntries() {
-		return entryList;
-	}
+    public Set<String> getEntries() {
+        return entryList;
+    }
 
-	public void addJar(File jarFile, String embeddedFile, String encoding) throws ParsingException {
-		InputStream is = null;
-		try {
-			URL[] urls = {jarFile.toURI().toURL()};
-			ClassLoader cl = new URLClassLoader(urls);
+    public void addJar(File jarFile, String embeddedFile, String encoding) throws ParsingException {
+        InputStream is = null;
+        try {
+            URL[] urls = {jarFile.toURI().toURL()};
+            ClassLoader cl = new URLClassLoader(urls);
 
-			is = cl.getResourceAsStream(embeddedFile);
+            is = cl.getResourceAsStream(embeddedFile);
 
-			if (is == null)
-				return;
+            if (is == null)
+                return;
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(is, encoding));
+            BufferedReader in = new BufferedReader(new InputStreamReader(is, encoding));
 
-			String readLine;
+            String readLine;
 
-			while ((readLine = in.readLine()) != null) {
-				readLine = readLine.trim();
+            while ((readLine = in.readLine()) != null) {
+                readLine = readLine.trim();
 
-				if (readLine.isEmpty() || readLine.startsWith("#"))
-					continue;
+                if (readLine.isEmpty() || readLine.startsWith("#"))
+                    continue;
 
-				getEntries().add(readLine);
-			}
+                getEntries().add(readLine);
+            }
 
-			in.close();
+            in.close();
 
-		} catch (MalformedURLException ex) {
-			throw new ParsingException(ex);
-		} catch (IOException ex) {
-			throw new ParsingException(ex);
-		} finally {
-			if (is != null)
-				try {
-					is.close();
-			} catch (IOException ex) {
-				throw new ParsingException(ex);
-			}
-		}
-	}
+        } catch (MalformedURLException ex) {
+            throw new ParsingException(ex);
+        } catch (IOException ex) {
+            throw new ParsingException(ex);
+        } finally {
+            if (is != null)
+                try {
+                    is.close();
+            } catch (IOException ex) {
+                throw new ParsingException(ex);
+            }
+        }
+    }
 
-	protected void addEntry(String entry) {
-		getEntries().add(entry);
-	}
+    protected void addEntry(String entry) {
+        getEntries().add(entry);
+    }
 
-	public void addClassInfo(ClassInfo classInfo) {
-		addEntry(getEntryString(classInfo));
-	}
+    public void addClassInfo(ClassInfo classInfo) {
+        addEntry(getEntryString(classInfo));
+    }
 
-	protected abstract String getEntryString(ClassInfo classInfo);
+    protected abstract String getEntryString(ClassInfo classInfo);
 }

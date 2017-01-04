@@ -21,10 +21,10 @@ package com.agapsys.mvn.scanner.parser;
  * @author Leandro Oliveira (leandro@agapsys.com)
  */
 public class AnnotationInfo {
-	public String className;
+    public String className;
 
-	@Override
-	public String toString() {
-		return className;
-	}
+    @Override
+    public String toString() {
+        return className;
+    }
 }

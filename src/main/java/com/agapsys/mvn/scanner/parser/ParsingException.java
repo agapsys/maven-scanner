@@ -18,11 +18,11 @@ package com.agapsys.mvn.scanner.parser;
 
 public class ParsingException extends Exception {
 
-	public ParsingException(String message, Object...args) {
-		super(args.length > 0 ? String.format(message, args) : message);
-	}
+    public ParsingException(String message, Object...args) {
+        super(args.length > 0 ? String.format(message, args) : message);
+    }
 
-	public ParsingException(Throwable cause) {
-		super(cause);
-	}
+    public ParsingException(Throwable cause) {
+        super(cause);
+    }
 }

@@ -20,29 +20,29 @@ import com.github.javaparser.ast.AccessSpecifier;
 import com.github.javaparser.ast.body.ModifierSet;
 
 public enum Visibility {
-	PRIVATE,
-	PROTECTED,
-	DEFAULT,
-	PUBLIC;
-	
-	static Visibility fromModifiers(int modifiers) {
-		AccessSpecifier specifier = ModifierSet.getAccessSpecifier(modifiers);
+    PRIVATE,
+    PROTECTED,
+    DEFAULT,
+    PUBLIC;
+    
+    static Visibility fromModifiers(int modifiers) {
+        AccessSpecifier specifier = ModifierSet.getAccessSpecifier(modifiers);
 
-		switch (specifier) {
-			case DEFAULT:
-				return DEFAULT;
+        switch (specifier) {
+            case DEFAULT:
+                return DEFAULT;
 
-			case PRIVATE:
-				return PRIVATE;
+            case PRIVATE:
+                return PRIVATE;
 
-			case PROTECTED:
-				return PROTECTED;
+            case PROTECTED:
+                return PROTECTED;
 
-			case PUBLIC:
-				return PUBLIC;
+            case PUBLIC:
+                return PUBLIC;
 
-			default:
-				throw new UnsupportedOperationException("Unsupported modifier: " + specifier.name());
-		}
-	}
+            default:
+                throw new UnsupportedOperationException("Unsupported modifier: " + specifier.name());
+        }
+    }
 }
