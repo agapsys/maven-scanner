@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
  */
 class ClassVisitor extends VoidVisitorAdapter {
     // CLASS SCOPE =============================================================
-    private static String getClassName(String packageName, String identifier, List<String> imports) {
+    private static String _getClassName(String packageName, String identifier, List<String> imports) {
         int genericBegin = identifier.indexOf("<");
         int genericEnd = identifier.lastIndexOf(">");
 
@@ -61,7 +61,7 @@ class ClassVisitor extends VoidVisitorAdapter {
         return identifier;
     }
 
-    private static String getReflectionClassName(String packageName, String containerClass, String simpleName) {
+    private static String _getReflectionClassName(String packageName, String containerClass, String simpleName) {
 
         if (!containerClass.isEmpty())
             return containerClass + "$" + simpleName;
@@ -73,7 +73,7 @@ class ClassVisitor extends VoidVisitorAdapter {
         }
     }
 
-    private static String getClassName(String packageName, String containerClass, String simpleName) {
+    private static String _getClassName(String packageName, String containerClass, String simpleName) {
 
         if (!containerClass.isEmpty())
             return containerClass + "." + simpleName;
@@ -85,7 +85,7 @@ class ClassVisitor extends VoidVisitorAdapter {
         }
     }
 
-    private static ClassInfo getClassInfo(SourceFileInfo sourceFileInfo, String packageName, List<String> imports, TypeDeclaration td) {
+    private static ClassInfo _getClassInfo(SourceFileInfo sourceFileInfo, String packageName, List<String> imports, TypeDeclaration td) {
         ClassInfo classInfo = new ClassInfo();
         classInfo.sourceFileInfo = sourceFileInfo;
 
@@ -99,9 +99,9 @@ class ClassVisitor extends VoidVisitorAdapter {
         }
 
         classInfo.containerClass = containerClass;
-        classInfo.className = getClassName(packageName, containerClass == null ? "" : containerClass.className, td.getName().toString());
+        classInfo.className = _getClassName(packageName, containerClass == null ? "" : containerClass.className, td.getName().toString());
         classInfo.isStaticNested = containerClass != null && ModifierSet.isStatic(td.getModifiers());
-        classInfo.reflectionClassName = getReflectionClassName(packageName, containerClass == null ? "" : containerClass.reflectionClassName, td.getName().toString());
+        classInfo.reflectionClassName = _getReflectionClassName(packageName, containerClass == null ? "" : containerClass.reflectionClassName, td.getName().toString());
         classInfo.visibility = Visibility.fromModifiers(td.getModifiers());
         classInfo.isAbstract = ModifierSet.isAbstract(td.getModifiers());
 
@@ -110,7 +110,7 @@ class ClassVisitor extends VoidVisitorAdapter {
             classInfo.isInterface = cid.isInterface();
 
             List extendsList = cid.getExtends();
-            classInfo.superclassName = extendsList == null || extendsList.isEmpty() ? null : getClassName(packageName, extendsList.get(0).toString(), imports);
+            classInfo.superclassName = extendsList == null || extendsList.isEmpty() ? null : _getClassName(packageName, extendsList.get(0).toString(), imports);
 
             List<ClassOrInterfaceType> implementList = cid.getImplements();
 
@@ -118,7 +118,7 @@ class ClassVisitor extends VoidVisitorAdapter {
                 implementList = new LinkedList<ClassOrInterfaceType>();
 
             for (ClassOrInterfaceType id : implementList) {
-                classInfo.implementedInterfaces.add(getClassName(packageName, id.toString(), imports));
+                classInfo.implementedInterfaces.add(_getClassName(packageName, id.toString(), imports));
             }
 
             classInfo.isEnum = false;
@@ -132,7 +132,7 @@ class ClassVisitor extends VoidVisitorAdapter {
             annotationList = new LinkedList<AnnotationExpr>();
 
         for (AnnotationExpr ae : annotationList) {
-            AnnotationInfo annotation = getAnnotationInfo(packageName, imports, ae);
+            AnnotationInfo annotation = _getAnnotationInfo(packageName, imports, ae);
             classInfo.annotations.add(annotation);
         }
 
@@ -142,24 +142,49 @@ class ClassVisitor extends VoidVisitorAdapter {
 
         for (BodyDeclaration member : bodyDeclarationList) {
             if (member instanceof MethodDeclaration) {
-                classInfo.methods.add(getMethodInfo(packageName, imports, (MethodDeclaration) member));
+                classInfo.methods.add(_getMethodInfo(packageName, imports, (MethodDeclaration) member));
             }
         }
 
         return classInfo;
     }
 
-    private static AnnotationInfo getAnnotationInfo(String packgeName, List<String> imports, AnnotationExpr ae) {
+	private static String _trim(String str, String chars) {
+
+		while (true) {
+			if (str.startsWith(chars)) {
+				str = str.substring(chars.length());
+			} else {
+				break;
+			}
+		}
+
+		while(true) {
+			if (str.endsWith(chars)) {
+				str = str.substring(0, str.length() - chars.length());
+			} else {
+				break;
+			}
+		}
+
+		return str;
+	}
+
+    private static AnnotationInfo _getAnnotationInfo(String packgeName, List<String> imports, AnnotationExpr ae) {
         AnnotationInfo annotation = new AnnotationInfo();
-        annotation.className = getClassName(packgeName, ae.getName().toString(), imports);
+        annotation.className = _getClassName(packgeName, ae.getName().toString(), imports);
+		if (ae.getChildrenNodes().size() > 1) {
+			annotation.memberValue = _trim(ae.getChildrenNodes().get(1).toString(), "\"");
+		}
+
         return annotation;
     }
 
-    private static MethodInfo getMethodInfo(String packageName, List<String> imports, MethodDeclaration md) {
+    private static MethodInfo _getMethodInfo(String packageName, List<String> imports, MethodDeclaration md) {
         MethodInfo info = new MethodInfo();
 
         for (AnnotationExpr ae : md.getAnnotations()) {
-            AnnotationInfo annotation = getAnnotationInfo(packageName, imports, ae);
+            AnnotationInfo annotation = _getAnnotationInfo(packageName, imports, ae);
             info.annotations.add(annotation);
         }
 
@@ -171,12 +196,12 @@ class ClassVisitor extends VoidVisitorAdapter {
         return info;
     }
 
-    private static final String getAnnotationParamValue(String packageName, Object expr, List<String> imports) {
+    private static final String _getAnnotationParamValue(String packageName, Object expr, List<String> imports) {
         String str = expr.toString();
 
         if (expr instanceof FieldAccessExpr) {
             FieldAccessExpr fae = (FieldAccessExpr) expr;
-            String className = getClassName(packageName, fae.getScope().toString(), imports);
+            String className = _getClassName(packageName, fae.getScope().toString(), imports);
             return String.format("%s.%s", className, fae.getField());
         } else if (expr instanceof IntegerLiteralExpr) {
             return str;
@@ -213,20 +238,20 @@ class ClassVisitor extends VoidVisitorAdapter {
         super.visit(n, arg);
     }
 
-    private void visit(TypeDeclaration td) {
-        ClassInfo classInfo = getClassInfo(sourceFileInfo, currentPackage, imports, td);
+    private void _visit(TypeDeclaration td) {
+        ClassInfo classInfo = _getClassInfo(sourceFileInfo, currentPackage, imports, td);
         sourceFileInfo.classes.add(classInfo);
     }
 
     @Override
     public void visit(EnumDeclaration n, Object arg) {
-        visit(n);
+        _visit(n);
         super.visit(n, arg);
     }
 
     @Override
     public void visit(ClassOrInterfaceDeclaration n, Object arg) {
-        visit(n);
+        _visit(n);
         super.visit(n, arg);
     }
     // =========================================================================

@@ -21,9 +21,15 @@ package com.agapsys.mvn.scanner.parser;
  */
 public class AnnotationInfo {
     public String className;
+	public String memberValue;
 
     @Override
     public String toString() {
-        return className;
+		if (className == null)
+			return null;
+
+		String memberValueStr = memberValue == null ? "" : "(\"\")";
+
+		return String.format("@%s%s", className, memberValueStr);
     }
 }
