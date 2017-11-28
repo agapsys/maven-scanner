@@ -44,18 +44,22 @@ public abstract class AbstractListMojo extends AbstractMojo {
     ) throws ParsingException {
 
         // Scan sources...
-        List<String> srcDirList = new LinkedList<String>();
-        srcDirList.add(mavenProject.getBuild().getSourceDirectory());
+        List<String> srcDirPathList = new LinkedList<String>();
+        srcDirPathList.add(mavenProject.getBuild().getSourceDirectory()); // <-- NOTE: a path will be returned even if it does not exist!
 
         if (includeTest)
-            srcDirList.add(mavenProject.getBuild().getTestSourceDirectory());
+            srcDirPathList.add(mavenProject.getBuild().getTestSourceDirectory()); // <-- NOTE: a path will be returned even if it does not exist!
 
-        for (String srcDir : srcDirList) {
-            Set<ClassInfo> filteredClasses = srcDirectoryScanner.getFilteredClasses(new File(srcDir));
+        for (String srcDirPath : srcDirPathList) {
+			File srcDir = new File(srcDirPath);
 
-            for (ClassInfo classInfo : filteredClasses) {
-                scanInfoInstance.addClassInfo(classInfo);
-            }
+			if (srcDir.exists()) {
+				Set<ClassInfo> filteredClasses = srcDirectoryScanner.getFilteredClasses(srcDir);
+
+				for (ClassInfo classInfo : filteredClasses) {
+					scanInfoInstance.addClassInfo(classInfo);
+				}
+			}
         }
 
         // Scan dependencies...
