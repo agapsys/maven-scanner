@@ -24,6 +24,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public abstract class SourceDirectoryScanner {
+
+	private final Set<ClassInfo> processedClasses = new LinkedHashSet<ClassInfo>();
+
+	public void reset() {
+		processedClasses.clear();
+	}
+
     /**
      * Parse a source directory
      * @param srcDirOrFile source directory to be analyzed.
@@ -31,7 +38,7 @@ public abstract class SourceDirectoryScanner {
      * @throws ParsingException if an error happened during parsing.
      */
     public final Set<ClassInfo> getFilteredClasses(File srcDirOrFile) throws ParsingException {
-        return parseDirOrFile(srcDirOrFile, null);
+        return _parseDirOrFile(srcDirOrFile, null);
     }
 
     /**
@@ -43,26 +50,26 @@ public abstract class SourceDirectoryScanner {
     protected abstract boolean shallBeIncluded(ClassInfo classInfo) throws ParsingException;
 
     protected void beforeInclude(ClassInfo classInfo) {}
-    
+
     /**
      * Parses a directory
      * @param srcDirOrFile directory or source file to be analyzed
      * @param classInfoSet set which will contain returned results. On non-recursive calls, pass null.
      * @throws ParsingException if an error happened during parsing.
      */
-    private Set<ClassInfo> parseDirOrFile(File srcDirOrFile, Set<ClassInfo> classInfoSet) throws ParsingException {
+    private Set<ClassInfo> _parseDirOrFile(File srcDirOrFile, Set<ClassInfo> classInfoSet) throws ParsingException {
         if (classInfoSet == null)
             classInfoSet = new LinkedHashSet<ClassInfo>();
 
         if (srcDirOrFile.isFile()) {
-            parseFile(srcDirOrFile, classInfoSet);
+            _parseFile(srcDirOrFile, classInfoSet);
         } else {
             for (File file : srcDirOrFile.listFiles()) {
                 if (file.isDirectory()) {
-                    parseDirOrFile(file, classInfoSet);
+                    _parseDirOrFile(file, classInfoSet);
                 } else {
-                    if (file.getName().endsWith(".java")) 
-                        parseFile(file, classInfoSet);
+                    if (file.getName().endsWith(".java"))
+                        _parseFile(file, classInfoSet);
                 }
             }
         }
@@ -76,13 +83,14 @@ public abstract class SourceDirectoryScanner {
      * @param classInfoSet list which will contain returned results.
      * @throws ParsingException if an error happened during parsing.
      */
-    private void parseFile(File srcFile, Set<ClassInfo> classInfoSet) throws ParsingException {
+    private void _parseFile(File srcFile, Set<ClassInfo> classInfoSet) throws ParsingException {
         SourceFileInfo srcFileInfo = SourceFileInfo.getInfo(srcFile);
 
         for (ClassInfo classInfo : srcFileInfo.classes) {
-            if (shallBeIncluded(classInfo)) {
+            if (!processedClasses.contains(classInfo) && shallBeIncluded(classInfo)) {
                 beforeInclude(classInfo);
                 classInfoSet.add(classInfo);
+				processedClasses.add(classInfo);
             }
         }
     }
